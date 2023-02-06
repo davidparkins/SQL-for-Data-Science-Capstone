@@ -1,0 +1,78 @@
+                                                             Step 1: Preparing for your Proposal
+
+1. Which client/dataset did you select and why?
+  Answer: I chose the following client because I enjoy sports.
+  
+Client 3: SportsStats (Olympics Dataset - 120 years of data)
+SportsStats is a sports analysis firm partnering with local news and elite personal trainers to provide “interesting” insights to help their partners.  Insights could be patterns/trends highlighting certain groups/events/countries, etc. for the purpose of developing a news story or discovering key health insights.
+
+2. Describe the steps you took to import and clean the data.
+
+  Answer: I imported the data into Databricks similarly to what was learned in "Distributed Computing with Spark SQL".
+          I cleaned up the data by using DISTINCT on the ID column to eliminate duplicates and created a few tables to make the data easier to manage.
+          
+3. Perform initial exploration of data and provide some screenshots or display some stats of the data you are looking at.
+  
+  Answer: The first digging I did into the data was to see how many athletes won medals, and how many each one. I then grouped athletes by how many medals they won.
+  
+          SELECT count(name) as #_of_Athletes, 
+                medals as Medals_won
+          FROM profile
+          group by medals
+          order by medals desc
+  
+          The top 4 results of this returned:
+            #_of_Ahletes     Medals_Won
+                3               8
+                8               7
+                25              6
+                57              5
+
+   I also was curious about the breakdown of medals won by NOC
+          
+          SELECT NOC,
+                 count(medal) as Medals
+          FROM NOC_Medals
+          GROUP BY NOC
+          ORDER BY count(medal) desc
+          
+          The top 4 results of this returned:
+            NOC               Medals
+            USA                 5637
+            URS                 2503
+            GER                 2165
+            GBR                 2068
+            
+4. Create an ERD or proposed ERD to show the relationships of the data you are exploring. 
+
+          Genderinfo    <----     Profile    <----    Athlete_Events   ---->    Location  ---->     NOC_Medals
+          -----------             -------             ---------------           ---------           ------------
+          Name,                   Name,                Name,                     NOC,               NOC,
+          Sex,                    Sex,                 Sex,                      City,              Sport,
+          Team,                   Height,              Age,                      Sport,             Season,
+          Medals,                 Weight,              Height,                   Season,            Medal,
+          NOC                     Age,                 Weight,                   Event,             Year
+	  			  Team,		       Team,			 Medal,		    
+				  Medals,	       NOC,			 Year
+				  NOC		       Games,
+				  		       Year,
+						       Season,
+						       City,
+						       Sport,
+						       Event,
+						       Medal
+						       
+						       STEP 2:Develop Project Proposal
+
+Description: I am going to look at marketing for sports brand companies. I am looking to break down marketable areas for successful sports all over the world. This will give companies the ability to market items directly to a consumer base that has seen success from Olympians, thus driving up interest. Ideally, this information will give a conclusive breakdown to which sport products and athlete likeness products will perform the best in which areas.
+
+Questions:
+		1. How many separate sports are listed? Will there be a dominate region for particular sports?
+		2. How successful will small countries with few medals be and in which events?
+		
+		
+Hypothesis:
+		I believe countries like the USA will have a vast array of sports and athletes to market with, however, this could come with cost and more risk. I believe smaller countries will specialize in 1 or 2 events with far less 'Big Name' athletes and, thus, be easier and cheaper to pinpoint marketing efforts toward. I plan on providing data for both cases.
+		
+Approach:
+		The approach I am going to take is to compare countries earned Medals to develop a heatmap of markets by event. I will use the Medals column with both Athletes and NOCs. The metric for evaluation will be medals won per athlete and medals won per NOC.
